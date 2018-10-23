@@ -6,21 +6,25 @@ class MessagesController < ApplicationController
   end
 
   def create
-    message = Message.new(message_params)
-    conversation = Conversation.find(message_params[:conversation_id])
-    if message.save
+    if params.has_key?(:sdp)
+      ActionCable.server.broadcast "messages_channel", message_params
+    else
+      message = Message.new(message_params)
+      conversation = Conversation.find(message_params[:conversation_id])
+        if message.save
       # byebug
-      serialized_data = ActiveModelSerializers::Adapter::Json.new(
-        MessageSerializer.new(message)
-      ).serializable_hash
-      MessagesChannel.broadcast_to conversation, serialized_data
-      head :ok
+        serialized_data = ActiveModelSerializers::Adapter::Json.new(
+          MessageSerializer.new(message)
+        ).serializable_hash
+        MessagesChannel.broadcast_to conversation, serialized_data
+        head :ok
+      end
     end
   end
 
   private
 
   def message_params
-    params.require(:message).permit(:text, :conversation_id, :user_id)
+    params.permit(:text, :conversation_id, :user_id,:to,:sdp,:candidate,:type)
   end
 end

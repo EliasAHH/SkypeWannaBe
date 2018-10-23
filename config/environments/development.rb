@@ -27,7 +27,7 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
-  config.action_cable.url = 'ws://1cc8bec1.ngrok.io/cable'
+  config.action_cable.url = 'ws://49b6b44d.ngrok.io/cable'
   config.action_cable.allowed_request_origins = [/http:\/\/*/, /https:\/\/*/]
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
