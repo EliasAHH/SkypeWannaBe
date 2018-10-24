@@ -7,7 +7,7 @@ class MessagesController < ApplicationController
 
   def create
     if params.has_key?(:sdp)
-      ActionCable.server.broadcast "messages_channel", message_params
+      MessagesChannel.broadcast_to "conversation_channel", message_params
     else
       message = Message.new(message_params)
       conversation = Conversation.find(message_params[:conversation_id])
